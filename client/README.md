@@ -1,8 +1,7 @@
 # 🐶🐱 Pet Station Shop - Build a Website for Pet Toys
 
 ## 👥 Team Members
-- **[Tran Long Vu]** - Team Leader
-- **[Mach Ngoc Xuan]** - Member
+- **[Mach Ngoc Xuan]** - Team Leader
 - **[Vo Ngoc Thuy Vy]** - Member
 - **[Phan Nguuyen Vu]** - Member
 
@@ -40,24 +39,8 @@
 - 📡 **RESTful API** - Data communication between frontend and backend
 - 🔄 **Axios** - HTTP requests handling
 
-## 📸 Screenshots
-_(Coming soon)_
-
-## 🚀 Getting Started
-```bash
-# Clone the repository
-git clone [https://github.com/your-repo/pet-station-shop.git](https://github.com/penguinguci/project_webs_selling_dog_and_cat_toys_gr19)
-
-# Install dependencies
-cd project_webs_selling_dog_and_cat_toys_gr19
-npm install
-
-# Run the development server
-npm run dev
-```
-
 ## 📩 Contact
-For any inquiries or collaborations, feel free to contact us at **vutkd23405@gmail.com**.
+For any inquiries or collaborations, feel free to contact us at **machngocxuan2004@gmail.com**.
 
 ---
 🐾 *Happy Shopping for Your Furry Friends!* 🐾
