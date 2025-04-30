@@ -4,6 +4,7 @@ export const getAllProducts = async (req, res) => {
   try {
     let query = {};
     
+    
     if (req.query.category) {
       query.category_id = req.query.category;
     }

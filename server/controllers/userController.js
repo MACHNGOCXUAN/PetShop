@@ -1,4 +1,11 @@
 import User from '../models/User.js'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+
+
+const generateToken = (user) => {
+    return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -81,16 +88,30 @@ export const login = async (req, res) => {
   const { phone, password } = req.body;
 
   try {
-    const user = await User.findOne({ phone, password });
+    const user = await User.findOne({ phone });
     if (!user) {
-      return res.status(401).json({ message: 'Số điện thoại hoặc mật khẩu không chính xác.' });
+      return res.status(401).json({ message: 'Số điện thoại không tồn tại.' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Mật khẩu không chính xác.' });
     }
 
     user.status = 'Active';
     user.lastActive = new Date();
+    const token = generateToken(user);
     await user.save();
 
-    res.json(user);
+    const userData = {
+      ...user.toObject(),
+      accesstoken: token
+    }
+
+    
+
+    res.status(200).json(userData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -135,6 +156,9 @@ export const checkDuplicate = async (req, res) => {
 
 export const register = async (req, res) => {
   const { fullName, phone, email, birthDate, password, avatar } = req.body;
+  
+
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     const user = new User({
@@ -142,7 +166,7 @@ export const register = async (req, res) => {
       phone,
       email,
       birthDate,
-      password,
+      password: hashedPassword,
       role: "user",
       avatar
     });
