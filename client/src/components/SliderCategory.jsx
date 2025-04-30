@@ -64,12 +64,12 @@ function SliderCategory() {
   };
 
   return (
-    <div className="relative md:bottom-20 z-20 max-w-[1200px] mx-auto bg-amber-50">
+    <div className="relative md:bottom-20 z-20 max-w-[1200px] mx-auto bg-amber-50 border-1 border-amber-500">
       <Slider {...settings}>
       {
         categories.map((item, index) => (
           <div key={index}>
-            <div onClick={()=>navigate(`/categories/${item.slug.replace(/(-cho-cun|-cho-meo)$/, "")}`)} className=" h-30 md:h-40 flex flex-col justify-center items-center border-1 border-amber-500 group hover:cursor-pointer">
+            <div onClick={()=>navigate(`/categories/${item.slug.replace(/(-cho-cun|-cho-meo)$/, "")}`)} className=" h-30 md:h-40 flex flex-col justify-center items-center border-l-1 border-amber-500 group hover:cursor-pointer">
               <img src={item.image} alt="" className="size-16 md:size-20 transition-transform duration-500 group-hover:rotate-y-[360deg]"/>
               <span className="group-hover:text-amber-700 text-[12px] md:text-base">{item.name.replace(/( cho cún| cho mèo)$/, "")}
               </span>

@@ -107,36 +107,40 @@ function DialogProduct({ open, setOpen, product }) {
               ))}
             </div>
           </div>
-          <div className="w-1/2 flex flex-col gap-7">
+          <div className="w-1/2 flex flex-col justify-between">
+          <div className="flex flex-col gap-7">
             <Link to={`/product/${product.slug}`} className="font-bold text-2xl text-[#333] text-brown-hover transition-colors duration-150">{product.name}</Link>
-            <span>Thương hiệu: Khác | Tình trạng: {product.sold === product.stock ? "Hết hàng":"Còn hàng"}</span>
-            <div className="bg-brown w-44 text-center p-1 skew-x-[-15deg] ml-1">
-              <h2 className="text-2xl text-white font-bold">
+            <span className="opacity-50">Thương hiệu: Khác | Tình trạng: {product.sold === product.stock ? "Hết hàng":"Còn hàng"}</span>
+            <div className="flex items-center gap-5">
+                      <h5 className="font-bold text-[25px] text-red-600">
                 {/* {new Intl.NumberFormat('vi-VN').format(quantity * product.price)}đ */}
                 {new Intl.NumberFormat('vi-VN').format(product.price)}đ
-              </h2>
-            </div>
+                </h5>
+                </div>
             <div className="flex items-center gap-5">
               <span className="text-gray-700">Số lượng: </span>
-              <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                <button
-                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200"
-                  onClick={handleDecrease}
-                  disabled={quantity <= 1}
-                >
-                  -
-                </button>
-                <span className="px-5 border-x-2 border-gray-300">{quantity}</span>
-                <button
-                  className="px-3 py-1 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition-colors duration-200"
-                  onClick={handleIncrease}
-                >
-                  +
-                </button>
-              </div>
+              <div className="flex items-center w-fit bg-white border border-gray-300 rounded-full shadow-sm">
+                    <button
+                      className="size-10 text-lg font-bold bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={handleDecrease}
+                      disabled={quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <span className="px-6 text-lg font-medium">{quantity}</span>
+                    <button
+                      className="size-10 text-lg font-bold bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition rounded-full"
+                      onClick={handleIncrease}
+                    >
+                      +
+                    </button>
+                  </div>
             </div>
-            <button onClick={()=>handleAddToCart()} className="w-60 border-2 text-white bg-brown hover:bg-white rounded-[5px] hover:border-[#d06a03] py-2 transition-colors duration-200">Thêm vào giỏ hàng</button>
-            <button onClick={()=>handleBuyNow()} className="w-60 border-2 text-white bg-brown hover:bg-white rounded-[5px] hover:border-[#d06a03] py-2 transition-colors duration-200">Mua ngay</button>
+            </div>
+            <div className="flex gap-5">
+              <button onClick={()=>handleAddToCart()} className="mt-3 mb-2 border-2 border-amber-600 duration-200 transition-colors hover:bg-amber-600 hover:text-white w-full py-2 rounded-[10px] font-medium cursor-pointer">Thêm vào giỏ hàng</button>
+              <button onClick={()=>handleBuyNow()} className="mt-3 mb-2 bg-[#e17100] text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[10px] font-medium cursor-pointer">Mua ngay</button>
+            </div>
           </div>
         </div>
       </div>

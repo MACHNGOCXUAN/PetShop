@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import cart1 from "../assets/images/cart1.png";
 import { useCart } from "../context/CartContext";
-import {toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const DialogCart = ({ cartItems = [], idUser, onUpdateCart }) => {
   const navigate = useNavigate();
   const { removeFromCart } = useCart();
-  
+
   // Xử lý xóa sản phẩm
   const removeItem = async (itemId) => {
     if (!idUser) {
@@ -57,11 +57,14 @@ const DialogCart = ({ cartItems = [], idUser, onUpdateCart }) => {
                   </p>
                   <p className="text-brown font-semibold">
                     {(item.product_id?.price || 0).toLocaleString()}đ
-                    <span className="text-gray-500 text-xs ml-1"> x {item.quantity}</span>
+                    <span className="text-gray-500 text-xs ml-1">
+                      {" "}
+                      x {item.quantity}
+                    </span>
                   </p>
                 </div>
                 <button
-                  className="text-gray-400 hover:text-red-500"
+                  className="text-gray-400 hover:text-red-500 cursor-pointer"
                   onClick={() => removeItem(item._id)}
                 >
                   <FaTimes />
@@ -73,7 +76,9 @@ const DialogCart = ({ cartItems = [], idUser, onUpdateCart }) => {
           {/* Tổng tiền */}
           <div className="mt-3 flex justify-between items-center font-bold text-gray-900">
             <span>Tổng tiền:</span>
-            <span className="text-brown text-lg">{totalPrice.toLocaleString()}đ</span>
+            <span className="text-brown text-lg">
+              {totalPrice.toLocaleString()}đ
+            </span>
           </div>
 
           {/* Nút Thanh Toán */}

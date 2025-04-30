@@ -9,6 +9,7 @@ import axiosInstance from "../utils/axiosInstance";
 import boxCard from "../assets/images/box-card.png";
 import bankCard from "../assets/images/bank-card.png";
 import { CheckCheck, ChevronDown } from "lucide-react";
+import { BsBox2 } from "react-icons/bs";
 
 const CheckOut = () => {
   const [deliveryOption, setDeliveryOption] = useState("delivery");
@@ -427,28 +428,7 @@ const CheckOut = () => {
                       <div className="flex items-center justify-center border border-gray-200 rounded p-8">
                         <div className="text-center">
                           <div className="mb-4 flex justify-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="108"
-                              height="85"
-                              viewBox="24.1 -17 68 54"
-                              enable-background="new 24.1 -17 68 54"
-                            >
-                              <path
-                                stroke="#B2B2B2"
-                                stroke-width="2"
-                                stroke-miterlimit="10"
-                                fill="none"
-                                d="M25.1-5h66M32.1 28h16M32.1 23h12"
-                              />
-                              <path
-                                stroke="#B2B2B2"
-                                stroke-width="2"
-                                stroke-miterlimit="10"
-                                d="M25.1-5.4l6.7-10.6h52.9l6.4 10.6v38.6c0 1.6-1.2 2.8-2.8 2.8h-60.4c-1.6 0-2.8-1.2-2.8-2.8v-38.6zM58.1-16v11"
-                                fill="none"
-                              />
-                            </svg>
+                            <BsBox2 size={90} className="text-gray-500" />
                           </div>
                           <p className="text-gray-600">
                             Vui lòng chọn tỉnh / thành để có danh sách phương

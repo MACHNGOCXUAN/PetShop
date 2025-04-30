@@ -24,6 +24,7 @@ import OrderManagement from "./pages/OrderManagement";
 import InventoryManagement from "./pages/InventoryManagement";
 import SmoothScrollContainer from "./layout/SmoothScrollContainer";
 import ContactUs from "./pages/ContactUs";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   const dispatch = useDispatch();
@@ -66,6 +67,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/order-management" element={<OrderManagement />} />
+            <Route path="/forgotpassword" element={<ForgotPassword/>} />
             <Route
               path="/inventory-management"
               element={<InventoryManagement />}

@@ -50,23 +50,28 @@ const Filter = () => {
   }, [dispatch])
 
   return (
-    <div className=" bg-white shadow-md">
+    <div>
       <div className="mb-4">
-        <h4 className="bg-brown text-white px-3 py-2 font-semibold mb-5">DANH MỤC</h4>
-        <div className="bg-white border rounded p-2 flex flex-col gap-2">
+        <h4 className="bg-brown text-white p-3 font-semibold mb-3 rounded-[10px] text-center">
+          DANH MỤC
+        </h4>
+        <div className="bg-white border border-gray-200 rounded-[10px] p-2 flex flex-col gap-1 shadow-sm">
           {allCategory?.map((category, index) => (
-            <div key={index} className="hover:text-[#e17100]">
-              <Link to={`/categories/${category.slug}`}>{category.name}</Link>
-            </div>
+            <Link
+              key={index}
+              to={`/categories/${category.slug}`}
+              className="block px-3 py-2 rounded-[8px] hover:bg-[#e17100]/10 hover:text-[#e17100] transition-all duration-200"
+            >
+              {category.name}
+            </Link>
           ))}
         </div>
       </div>
-
-      <div>
-        <h4 className="bg-brown text-white px-3 py-2 font-semibold my-5">KHOẢNG GIÁ</h4>
-        <div className="bg-white border rounded p-2">
+      <div className="mb-4">
+        <h4 className="bg-brown text-white p-3 font-semibold mb-3 rounded-[10px] text-center">KHOẢNG GIÁ</h4>
+        <div className="bg-white border border-gray-200 rounded-[10px] p-2 flex flex-col gap-1 shadow-sm">
           {priceRanges.map((price, index) => (
-            <label key={index} className="flex items-center space-x-2 py-1">
+            <label key={index} className="flex items-center space-x-2 py-1 block px-3 py-2 rounded-[8px] hover:bg-[#e17100]/10 hover:text-[#e17100] transition-all duration-200">
               <input
                 type="checkbox"
                 value={price}
@@ -79,7 +84,15 @@ const Filter = () => {
           ))}
         </div>
       </div>
-      <button onClick={handleFilterSubmit} className="bg-brown w-full mt-5 py-2 text-[20px] text-white font-bold cursor-pointer">Lọc</button>
+      <div className="text-center">
+  <button 
+    onClick={handleFilterSubmit} 
+    className="w-50 bg-brown text-center rounded-[25px] mt-5 py-2 text-[20px] text-white font-bold cursor-pointer 
+    hover:bg-brown/80 hover:shadow-lg hover:scale-105 transition-all duration-300">
+    Lọc
+  </button>
+</div>
+
     </div>
   );
 };
