@@ -73,7 +73,7 @@ const CartShop = () => {
               <div className="flex justify-end mb-4">
                 <button
                   onClick={handleClearCart} // Mở modal khi nhấn nút
-                  className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors duration-200"
+                  className=" cursor-pointer bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors duration-200"
                 >
                   Xóa tất cả
                 </button>
@@ -190,7 +190,7 @@ const CartShop = () => {
                       <td className="p-5 w-16 text-center">
                         <button
                           onClick={() => removeFromCart(user._id, item._id)}
-                          className="text-red-500 hover:text-red-700 transition text-lg"
+                          className="cursor-pointer text-red-500 hover:text-red-700 transition text-lg"
                         >
                           <FaTrash />
                         </button>
@@ -235,7 +235,6 @@ const CartShop = () => {
             </Link>
           )}
         </div>
-
       </div>
     </MainLayout>
   );

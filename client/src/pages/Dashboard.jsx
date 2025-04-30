@@ -357,15 +357,15 @@ const Dashboard = () => {
   const getNotificationIcon = (type) => {
     switch (type) {
       case "stock":
-        return <Package size={16} className="text-red-500" />;
+        return <Package size={25} className="text-red-500" />;
       case "order":
-        return <ShoppingCart size={16} className="text-blue-500" />;
+        return <ShoppingCart size={20} className="text-blue-500" />;
       case "user":
-        return <Users size={16} className="text-green-500" />;
+        return <Users size={20} className="text-green-500" />;
       case "system":
-        return <AlertTriangle size={16} className="text-yellow-500" />;
+        return <AlertTriangle size={20} className="text-yellow-500" />;
       default:
-        return <Bell size={16} className="text-gray-500" />;
+        return <Bell size={20} className="text-gray-500" />;
     }
   };
 

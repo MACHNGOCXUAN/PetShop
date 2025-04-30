@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { featchProductByCategoryName, setCurrentPage } from '../stores/productSlice';
 import { Pagination } from 'antd';
 
+
 function Category() {
   const { productByCateoty: products, currentPage, totalPages, pageSize } = useSelector((state) => state.products);
   const { allCategory } = useSelector(state => state.categories);

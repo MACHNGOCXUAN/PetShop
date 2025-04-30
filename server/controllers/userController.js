@@ -1,10 +1,11 @@
 import User from '../models/User.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import verification from '../utils/sendEmail.js';
 
 
 const generateToken = (user) => {
-    return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
 export const getAllUsers = async (req, res) => {
@@ -86,9 +87,11 @@ export const deleteUser = async (req, res) => {
 
 export const login = async (req, res) => {
   const { phone, password } = req.body;
+  
 
   try {
     const user = await User.findOne({ phone });
+    
     if (!user) {
       return res.status(401).json({ message: 'Số điện thoại không tồn tại.' });
     }
@@ -101,7 +104,11 @@ export const login = async (req, res) => {
 
     user.status = 'Active';
     user.lastActive = new Date();
-    const token = generateToken(user);
+
+    const userpayload = {
+      _id: user._id,
+    }
+    const token = await generateToken(userpayload);
     await user.save();
 
     const userData = {
@@ -154,11 +161,15 @@ export const checkDuplicate = async (req, res) => {
   }
 };
 
+
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+}
+
 export const register = async (req, res) => {
   const { fullName, phone, email, birthDate, password, avatar } = req.body;
-  
-
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hashPassword(password);
 
   try {
     const user = new User({
@@ -245,3 +256,43 @@ export const searchUsers = async (req, res) => {
     });
   }
 };
+
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'Email không tồn tại.' });
+    }
+
+    const otp = await verification(email);
+
+    if(!otp) {
+      return res.status(500).json({ message: 'Gửi mã OTP thất bại.' });
+    }
+
+    res.status(200).json({ success: true, message: 'Mã OTP đã được gửi đến email của bạn.', otp });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
+
+
+export const resetPassword = async (req, res) => {
+  const {email, newPassword } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'Email không tồn tại.' });
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    user.password = hashedPassword;
+    await user.save();
+    res.status(200).json({success: true, message: 'Mật khẩu đã được thay đổi thành công.' });
+  } catch (error) {
+    res.status(500).json({success: false, message: error.message });
+  }
+}

@@ -11,6 +11,8 @@ import {
   register,
   checkDuplicate,
   logout,
+  forgotPassword,
+  resetPassword,
 } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -26,5 +28,7 @@ router.post('/check-duplicate', checkDuplicate);
 router.post('/logout', logout); 
 router.put('/:id', updateUser);
 router.delete('/:id', deleteUser);
+router.post("/forgotpassword", forgotPassword)
+router.post("/resetpassword", resetPassword)
 
 export default router;

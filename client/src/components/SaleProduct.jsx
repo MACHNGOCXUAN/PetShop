@@ -92,7 +92,7 @@ function SaleProduct({ productSale }) {
         {productSale?.map((product, index) => (
           <div key={index} className="px-3">
             <div>
-              <div className="flex flex-col gap-1 border-1 border-[#e17100] rounded-[5px] overflow-hidden bg-white">
+              <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer block">
                 <div className="relative group hover:cursor-pointer">
                   <Link to={`/product/${product.slug}`}>
                     <img
@@ -119,10 +119,10 @@ function SaleProduct({ productSale }) {
                     </button>
                   </div>
                 </div>
-                <div className="p-3 flex flex-col gap-1">
+                <div className="py-3 px-4 flex flex-col gap-1">
                   <Link
                     to={"/product/2"}
-                    className="line-clamp-1 hover:text-[#c49a6c] hover:cursor-pointer"
+                    className="line-clamp-2 hover:text-[#c49a6c] hover:cursor-pointer"
                   >
                     {product.name}
                   </Link>
@@ -132,7 +132,7 @@ function SaleProduct({ productSale }) {
                   <button
                     onClick={() => handleBuyNow(product)}
                     style={{}}
-                    className="bg-[#e17100] cursor-pointer text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[2px] font-medium"
+                    className="mt-3 mb-2 bg-[#e17100] cursor-pointer text-white border-2 border-[#e17100] duration-200 transition-colors hover:bg-white text-brown-hover w-full py-2 rounded-[10px] font-medium mt-2"
                   >
                     Mua ngay
                   </button>

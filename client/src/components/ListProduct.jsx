@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import axiosInstance from "../utils/axiosInstance";
 
 function ListProduct({title, products}) {
+  const icon = title.includes('cún') ? '🐶' : title.includes('mèo') ? '🐱' : '🐾';
 
   const [categories, setCategories] = useState([]);
 
@@ -64,13 +65,12 @@ function ListProduct({title, products}) {
     //     </div>
     //   </div>
     // </div>
-    <div className="border-1 border-[#e17100] p-5">
-      <div className="flex flex-row justify-between border-b-2 border-[#e17100]">
-        <div>
-          <div className="bg-brown w-44 text-center p-1 skew-x-[-15deg] ml-[10px]">
-            <h2 className="text-2xl text-white">{title}</h2>
+    <div className="p-5">
+      <div className="flex flex-row justify-between">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-orange-400 to-yellow-300 px-6 py-3 rounded-xl shadow-md text-white text-2xl font-bold mb-3">
+            <span>{icon}</span>
+            <h2>{title}</h2>
           </div>
-        </div>
         <ul className="hidden md:flex gap-5 pb-5">
           {collections.map((collection, index) => (
             <li key={index}>

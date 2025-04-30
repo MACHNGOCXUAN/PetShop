@@ -144,11 +144,10 @@ const Home = () => {
         <ListProduct products={productCategory["shop-cho-meo"]} title={"Shop cho mèo"} />
 
 
-        <div className="flex flex-row justify-between border-b-2 border-[#c49a6c]">
-          <div>
-            <div className="bg-[#e17100] w-44 text-center p-1 skew-x-[-15deg] ml-1">
-              <h2 className="text-2xl text-white">Tin tức</h2>
-            </div>
+<div className="p-5">
+        <div className="flex flex-row justify-between">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-orange-400 to-yellow-300 px-6 py-3 rounded-xl shadow-md text-white text-2xl font-bold">
+            <h2>Tin tức</h2>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
@@ -169,6 +168,7 @@ const Home = () => {
               </div>
             </Link>
           ))}
+        </div>
         </div>
       </div>
     </MainLayout>

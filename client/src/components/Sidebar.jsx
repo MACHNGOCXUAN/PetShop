@@ -68,22 +68,22 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
     },
     {
       path: "/inventory-management",
-      label: "Inventory Management",
+      label: "Quản lý tồn kho",
       icon: <MdOutlineInventory2 size={18} className="mr-3" />,
     },
     {
       path: "/order-management",
-      label: "Order Management",
+      label: "Quản lý đơn hàng",
       icon: <RiGalleryView2 size={18} className="mr-3" />,
     },
     {
       path: "/user-management",
-      label: "User Management",
+      label: "Quản lý người dùng",
       icon: <Users size={18} className="mr-3" />,
     },
     {
       path: "/settings",
-      label: "Settings",
+      label: "Cài đặt",
       icon: <Settings size={18} className="mr-3" />,
     },
   ];
@@ -169,7 +169,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
                   className="flex items-center text-sm cursor-pointer logout-btn"
                 >
                   <LogOut size={16} className="mr-2" />
-                  Logout
+                  Đăng xuất
                 </button>
                 {/* <button
                   onClick={toggleDarkMode}

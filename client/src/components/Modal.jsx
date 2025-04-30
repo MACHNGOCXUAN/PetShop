@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { IoIosClose } from "react-icons/io";
 
 const Modal = ({ isOpen, onClose, title, size = "md", children }) => {
   useEffect(() => {
@@ -50,19 +51,7 @@ const Modal = ({ isOpen, onClose, title, size = "md", children }) => {
                 className="text-gray-400 hover:text-gray-500 focus:outline-none cursor-pointer"
               >
                 <span className="sr-only">Close</span>
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                <IoIosClose className="w-6 h-6" />  
               </button>
             </div>
           </div>

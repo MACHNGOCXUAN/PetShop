@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Breadcrumb from "../components/Breadcrumb";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
@@ -182,6 +183,10 @@ const Login = () => {
                 (*) Mật khẩu tối thiểu 6 ký tự, có ít nhất 1 chữ và 1 số. (VD:
                 12345a)
               </small>
+              <div className="text-right mt-2">
+                <Link to="/forgotpassword" className="text-brown font-semibold">
+                  Quên mật khẩu?</Link>
+              </div>
             </div>
             <button
               type="submit"
