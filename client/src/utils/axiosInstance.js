@@ -6,8 +6,7 @@ console.log(`API_BASE_URL: ${API_BASE_URL}`);
 
 
 const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
+  baseURL: API_BASE_URL
 });
 
 
