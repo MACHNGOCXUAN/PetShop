@@ -166,6 +166,8 @@ export const refreshToken = async (req, res) => {
       res.cookie('accessToken', newAccessToken, {
         httpOnly: true,
         maxAge: Number(process.env.MAX_AGE_ACCESS_TOKEN),
+        secure: true,
+        sameSite: 'None'
       });
 
       res.status(200).json({ message: 'Access token đã được cấp lại' });
@@ -190,14 +192,14 @@ export const logout = async (req, res) => {
 
     res.clearCookie('accessToken', {
       httpOnly: true,
-      sameSite: 'Strict',
-      secure: process.env.NODE_ENV === 'production'
+      secure: true,
+      sameSite: 'None'
     });
 
     res.clearCookie('refreshToken', {
       httpOnly: true,
-      sameSite: 'Strict',
-      secure: process.env.NODE_ENV === 'production'
+      secure: true,
+      sameSite: 'None'
     });
 
     res.json({ success: true, message: 'Logout successful' });
