@@ -127,12 +127,14 @@ export const login = async (req, res) => {
       maxAge: Number(process.env.MAX_AGE_ACCESS_TOKEN),
       httpOnly: true,
       secure: true,
+      sameSite: 'None'
     });
 
     res.cookie('refreshToken', refreshToken, {
       maxAge: Number(process.env.MAX_AGE_REFRESH_TOKEN),
       httpOnly: true,
       secure: true,
+      sameSite: 'None'
     });
 
     
