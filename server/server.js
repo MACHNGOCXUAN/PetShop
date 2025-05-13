@@ -19,7 +19,7 @@ const host = process.env.HOST || 5000;
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // đúng domain frontend của bạn
+  origin: process.env.FRONTEND_URL, // đúng domain frontend của bạn
   credentials: true
 }));
 app.use(express.json());

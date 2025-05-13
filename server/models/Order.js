@@ -38,6 +38,12 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    payment_method: {
+        type: String,
+        required: true,
+        enum: ["COD", "Vnpay", "ZaloPay", "Momo"],
+        default: "COD",
+    },
     
 }, {collection: "orders"});
 
