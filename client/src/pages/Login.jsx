@@ -163,6 +163,8 @@ const Login = () => {
 
           await axiosInstance.post("/api/users/login-google", {
             email, fullName: name, avatar: picture,
+          }, {
+            withCredentials: true,
           })
 
           toast.success("Đăng nhập thành công!");
