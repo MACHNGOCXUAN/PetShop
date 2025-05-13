@@ -10,6 +10,7 @@ import boxCard from "../assets/images/box-card.png";
 import bankCard from "../assets/images/bank-card.png";
 import { CheckCheck, ChevronDown } from "lucide-react";
 import { BsBox2 } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 const CheckOut = () => {
   const [deliveryOption, setDeliveryOption] = useState("delivery");
@@ -44,8 +45,8 @@ const CheckOut = () => {
     couponCode: "",
   });
 
+  const {user: userData} = useSelector((state) => state?.user);
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
     if (userData) {
       setUser(userData);
       setFormData((prevState) => ({

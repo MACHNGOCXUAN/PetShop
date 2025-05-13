@@ -11,6 +11,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import SearchAndFilter from "../components/SearchAndFilter";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -37,9 +38,9 @@ const UserManagement = () => {
 
   const [currentUser, setCurrentUser] = useState(null);
 
+  const {user: userLocal} = useSelector((state) => state?.user);
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id)
         throw new Error("No user found in localStorage");
       const response = await axiosInstance.get(`api/users/${userLocal._id}`);

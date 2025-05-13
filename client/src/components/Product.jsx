@@ -5,7 +5,7 @@ import DialogProduct from "./DialogProduct";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Product({ product }) {
   const [open, setOpen] = useState(false);
@@ -39,7 +39,8 @@ function Product({ product }) {
   //     alert(error.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!");
   //   }
   // };
-  const user = JSON.parse(localStorage.getItem("user"));
+
+  const {user} = useSelector((state) => state?.user);
   const handleAddToCart = async () => {
     if (!user?._id) {
       navigate("/login");
@@ -60,6 +61,8 @@ function Product({ product }) {
   };
 
   const handleConfirmBuyNow = () => {
+    console.log("Confirm Buy Now with quantity:", user);
+    
     if (!user?._id) {
       navigate("/login");
       return;
@@ -68,6 +71,7 @@ function Product({ product }) {
     addToCart(user._id, product._id, quantity);
 
     setOpenQuantityPopup(false);
+    console.log("User no");
     navigate("/checkout");
   };
 

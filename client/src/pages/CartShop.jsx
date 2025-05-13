@@ -6,6 +6,7 @@ import { FaTrash } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const links = [
   { label: "Trang chủ", href: "/" },
@@ -23,7 +24,7 @@ const CartShop = () => {
     (sum, item) => sum + (item.product_id?.price || 0) * item.quantity,
     0
   );
-  const user = JSON.parse(localStorage.getItem("user"));
+  const {user} = useSelector((state) => state?.user);
 
   // Hàm xử lý xóa tất cả sản phẩm
   const handleClearCart = async () => {

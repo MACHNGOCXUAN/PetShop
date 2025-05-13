@@ -7,6 +7,7 @@ import ProductForm from "../components/ProductForm";
 import Modal from "../components/Modal";
 import { toast } from "react-toastify";
 import DeleteProductConfirmationModal from "../components/DeleteProductConfirmationModal";
+import { useSelector } from "react-redux";
 
 const InventoryManagement = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -24,9 +25,9 @@ const InventoryManagement = () => {
   const searchTimeoutRef = useRef(null);
 
 
+  const {user: userLocal} = useSelector((state) => state?.user);
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id)
         throw new Error("Lỗi không tìm thấy người dùng.");
       const response = await axiosInstance.get(`api/users/${userLocal._id}`);

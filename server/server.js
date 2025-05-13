@@ -9,6 +9,7 @@ import cartRoutes from "./routes/cartRoutes.js";
 import settingRoutes from "./routes/settingRoutes.js"; 
 import dashboadRoutes from "./routes/dashboardRoutes.js";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -17,8 +18,12 @@ const port = process.env.PORT || 5000;
 const host = process.env.HOST || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // đúng domain frontend của bạn
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 // Connect to MongoDB
 mongoose

@@ -27,17 +27,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentUser }) => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const userData = JSON.parse(localStorage.getItem("user"));
-      if (userData && userData._id) {
-        await axiosInstance.post("/api/users/logout", { userId: userData._id });
-        toast.success("Đăng xuất thành công!");
-      }
 
-      localStorage.removeItem("user");
-      setTimeout(() => {
-        setIsLoggingOut(false);
-        navigate("/");
-      }, 2000);
+      const respont = await axiosInstance.post("/api/users/logout", {
+        withCredentials: true,
+      });
+      
+      if(respont.data.success) {
+        toast.success("Đăng xuất thành công!");
+        setTimeout(() => {
+          setIsLoggingOut(false);
+          navigate("/");
+        }, 2000);
+      }
     } catch (err) {
       console.error("Logout Error:", err.response?.data || err.message);
       toast.error("Đăng xuất thất bại. Vui lòng thử lại!");

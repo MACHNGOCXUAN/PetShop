@@ -2,10 +2,16 @@ import User from '../models/User.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import verification from '../utils/sendEmail.js';
+import dotenv from 'dotenv'
+dotenv.config()
 
 
 const generateToken = (user) => {
-    return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '30s' });
+}
+
+const generateRefreshToken = (user) => {
+    return jwt.sign(user, process.env.JWT_SECRET_REFRESH, { expiresIn: '7d' });
 }
 
 export const getAllUsers = async (req, res) => {
@@ -106,15 +112,26 @@ export const login = async (req, res) => {
     user.lastActive = new Date();
 
     const userpayload = {
-      _id: user._id,
+      id: user._id,
+      role: user.role,
     }
-    const token = await generateToken(userpayload);
+    const accessToken = await generateToken(userpayload);
+    const refreshToken = await generateRefreshToken(userpayload);
     await user.save();
 
     const userData = {
-      ...user.toObject(),
-      accesstoken: token
+      ...user.toObject()
     }
+
+    res.cookie('accessToken', accessToken, {
+      maxAge: Number(process.env.MAX_AGE_ACCESS_TOKEN),
+      httpOnly: true,
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: Number(process.env.MAX_AGE_REFRESH_TOKEN),
+      httpOnly: true,
+    });
 
     
 
@@ -124,10 +141,39 @@ export const login = async (req, res) => {
   }
 };
 
+export const refreshToken = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: 'Không có refresh token' });
+  }
+
+  try {
+    jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH, async (err, decoded) => {
+      if (err) return res.status(403).json({ message: 'Refresh token không hợp lệ hoặc đã hết hạn' });
+
+      const user = await User.findById(decoded.id);
+      
+      if (!user) return res.status(404).json({ message: 'Người dùng không tồn tại' });
+
+      const payload = { id: user._id, role: user.role };
+      const newAccessToken = generateToken(payload);
+
+      res.cookie('accessToken', newAccessToken, {
+        httpOnly: true,
+        maxAge: Number(process.env.MAX_AGE_ACCESS_TOKEN),
+      });
+
+      res.status(200).json({ message: 'Access token đã được cấp lại' });
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server khi làm mới token' });
+  }
+};
+
 
 export const logout = async (req, res) => {
-  const { userId } = req.body;
-
+  const userId = req.user.id;
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -138,9 +184,21 @@ export const logout = async (req, res) => {
     user.lastActive = new Date();
     await user.save();
 
-    res.json({ message: 'Logout successful' });
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      sameSite: 'Strict',
+      secure: process.env.NODE_ENV === 'production'
+    });
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      sameSite: 'Strict',
+      secure: process.env.NODE_ENV === 'production'
+    });
+
+    res.json({ success: true, message: 'Logout successful' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -294,5 +352,55 @@ export const resetPassword = async (req, res) => {
     res.status(200).json({success: true, message: 'Mật khẩu đã được thay đổi thành công.' });
   } catch (error) {
     res.status(500).json({success: false, message: error.message });
+  }
+}
+
+export const getUserMe = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    const user = await User.findById(userId).select('-password -__v');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({success: false, message: error.message });
+  }
+}
+
+export const loginWithGoogle = async (req, res) => {
+  const { email, fullName, avatar } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        email,
+        fullName,
+        avatar,
+        role: 'user',
+        status: 'Active',
+        type: 'google',
+      });
+      await user.save();
+    }
+    const userPayload = {
+      id: user._id,
+      role: user.role,
+    }
+    const accessToken = await generateToken(userPayload);
+    const refreshToken = await generateRefreshToken(userPayload);
+    res.cookie('accessToken', accessToken, {
+      maxAge: Number(process.env.MAX_AGE_ACCESS_TOKEN),
+      httpOnly: true,
+    });
+    res.cookie('refreshToken', refreshToken, {
+      maxAge: Number(process.env.MAX_AGE_REFRESH_TOKEN),
+      httpOnly: true,
+    });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 }

@@ -10,6 +10,10 @@ import { Link, useNavigate } from "react-router-dom";
 import "./page.scss";
 import { ToastContainer, toast } from "react-toastify";
 import axiosInstance from "../utils/axiosInstance";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../stores/userSlice";
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const links = [{ label: "Trang chủ", link: "/" }, { label: "Đăng nhập" }];
@@ -19,6 +23,7 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -77,10 +82,14 @@ const Login = () => {
     }
 
     try {
-      const res = await axiosInstance.post("/api/users/login", {
-        phone: formData.phone,
-        password: formData.password,
-      });
+      const res = await axiosInstance.post(
+        "/api/users/login",
+        {
+          phone: formData.phone,
+          password: formData.password,
+        },
+        { withCredentials: true }
+      );
 
       const user = res.data;
 
@@ -91,7 +100,10 @@ const Login = () => {
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(user));
+      // Da luu trong cookie nen khong can luu trong localStorage
+      // localStorage.setItem("user", JSON.stringify(user));
+
+      dispatch(fetchUser());
       setSuccess(true);
       toast.success("Đăng nhập thành công!");
       setTimeout(() => {
@@ -113,6 +125,73 @@ const Login = () => {
     }
   };
 
+  const handleLoginGoogle = async (response) => {
+    const { credential } = response; // Token từ Google
+    console.log("Google Login response:", response);
+
+    try {
+      await axiosInstance.post("/api/users/login-google", {
+        tokenGoogle: credential,
+      });
+      toast.success("Đăng nhập thành công!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      navigate("/");
+    } catch (error) {
+      console.log("Login failed:", error);
+      toast.error("Đăng nhập thất bại. Vui lòng thử lại.");
+    }
+  };
+
+  function LoginButton() {
+    const login = useGoogleLogin({
+      onSuccess: async (tokenResponse) => {
+        try {
+          const res = await axios.get(
+            "https://www.googleapis.com/oauth2/v3/userinfo",
+            {
+              headers: {
+                Authorization: `Bearer ${tokenResponse.access_token}`,
+              },
+            }
+          );
+          console.log("Google User Info:", res.data);
+          
+
+          const { email, name, picture } = res.data;
+
+          await axiosInstance.post("/api/users/login-google", {
+            email, fullName: name, avatar: picture,
+          })
+
+          toast.success("Đăng nhập thành công!");
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+          dispatch(fetchUser());
+          setSuccess(true);
+          navigate("/");
+        } catch (err) {
+          console.error("Failed to fetch user info", err);
+        }
+      },
+      onError: () => {
+        console.log("Login failed");
+      },
+      scope: 'openid email profile'
+    });
+
+    return (
+      <button
+        onClick={() => login()}
+        className="flex items-center gap-2 bg-gray-100 px-6 py-3 rounded-md hover:bg-gray-200 shadow-sm cursor-pointer"
+      >
+        <FcGoogle className="text-4xl" />
+        Google
+      </button>
+    );
+  }
 
   return (
     <>
@@ -127,10 +206,11 @@ const Login = () => {
             Đăng nhập với
           </h1>
           <div className="flex justify-center gap-4 mb-6">
-            <button className="flex items-center gap-2 bg-gray-100 px-6 py-3 rounded-md hover:bg-gray-200 shadow-sm cursor-pointer">
-              <FcGoogle className="text-4xl" />
-              Google
-            </button>
+            <GoogleOAuthProvider
+              clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}
+            >
+              <LoginButton />
+            </GoogleOAuthProvider>
             <button className="flex items-center gap-2 bg-gray-100 px-6 py-3 rounded-md hover:bg-gray-200 shadow-sm cursor-pointer">
               <FaFacebook className="text-4xl text-blue-600" />
               Facebook
@@ -185,7 +265,8 @@ const Login = () => {
               </small>
               <div className="text-right mt-2">
                 <Link to="/forgotpassword" className="text-brown font-semibold">
-                  Quên mật khẩu?</Link>
+                  Quên mật khẩu?
+                </Link>
               </div>
             </div>
             <button
@@ -195,7 +276,16 @@ const Login = () => {
               Đăng nhập
             </button>
           </form>
-          
+
+          {/* <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+            <GoogleLogin
+              onSuccess={handleLoginGoogle}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />;
+          </GoogleOAuthProvider>; */}
+
           <p className="text-center text-gray-600 mt-6">
             Bạn chưa có tài khoản?{" "}
             <Link to="/register" className="text-brown font-semibold">

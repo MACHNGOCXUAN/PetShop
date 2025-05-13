@@ -12,7 +12,7 @@ import NewsDetail from "./pages/NewsDetail";
 import NotFoundPage from "./pages/NotFoundPage";
 import UserManagement from "./pages/UserManagement";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { featchProductSale, fetchProducts, fetchProductsByCategory } from "./stores/productSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,6 +25,7 @@ import InventoryManagement from "./pages/InventoryManagement";
 import SmoothScrollContainer from "./layout/SmoothScrollContainer";
 import ContactUs from "./pages/ContactUs";
 import ForgotPassword from "./pages/ForgotPassword";
+import { fetchUser } from "./stores/userSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -44,6 +45,10 @@ function App() {
   useEffect(() => {
     dispatch(featchProductSale());
   }, [dispatch])
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   return (
     <SmoothScrollContainer>

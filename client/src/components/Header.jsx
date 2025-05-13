@@ -91,34 +91,53 @@ const Header = () => {
     fetchCategories();
   }, []);
 
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const user = JSON.parse(localStorage.getItem("user"));
+  //     if (user) {
+  //       try {
+  //         const { data } = await axiosInstance.get(`/api/users/${user._id}`);
+  //         const userData = data;
+
+  //         userData.avatar = convertBase64ToImage(userData.avatar);
+  //         setUser({
+  //           name: userData.fullName,
+  //           avatar: userData.avatar,
+  //           role: userData.role,
+  //           id: userData._id,
+  //         });
+
+  //         if (userData.role === "admin") {
+  //           setIsAdmin(true);
+  //         }
+
+  //         setLoggedIn(true);
+  //       } catch (err) {
+  //         console.error("API Error:", err.response?.data || err.message);
+  //       }
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, []);
+
+  const {user: userMe} = useSelector((state) => state?.user);
+  
   useEffect(() => {
-    const fetchUserData = async () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user) {
-        try {
-          const { data } = await axiosInstance.get(`/api/users/${user._id}`);
-          const userData = data;
-
-          userData.avatar = convertBase64ToImage(userData.avatar);
-          setUser({
-            name: userData.fullName,
-            avatar: userData.avatar,
-            role: userData.role,
-            id: userData._id,
-          });
-
-          if (userData.role === "admin") {
-            setIsAdmin(true);
-          }
-
-          setLoggedIn(true);
-        } catch (err) {
-          console.error("API Error:", err.response?.data || err.message);
-        }
-      }
-    };
-    fetchUserData();
-  }, []);
+    if (userMe) {
+      setUser({
+        name: userMe.fullName,
+        avatar: convertBase64ToImage(userMe.avatar),
+        role: userMe.role,
+        id: userMe._id,
+      });
+      setLoggedIn(true);
+      setIsAdmin(userMe.role === "admin");
+    } else {
+      setUser({ name: "", avatar: "", role: "", id: "" });
+      setLoggedIn(false);
+      setIsAdmin(false);
+    }
+  }, [userMe]);
 
   useEffect(() => {
     if (user?.id) {
@@ -209,21 +228,21 @@ const Header = () => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const userData = JSON.parse(localStorage.getItem("user"));
-      if (userData && userData._id) {
-        await axiosInstance.post("/api/users/logout", { userId: userData._id });
+      const respont = await axiosInstance.post("/api/users/logout", {
+        withCredentials: true,
+      });
+
+      if(respont.data.success) {
+        setUser({ name: "", avatar: "", role: "", id: "" });
+        setLoggedIn(false);
+        setIsAdmin(false);
+
+        setTimeout(() => {
+          toast.success("Đăng xuất thành công!"); 
+          navigate("/");
+          setIsLoggingOut(false);
+        }, 700);
       }
-
-      localStorage.removeItem("user");
-      setUser({ name: "", avatar: "", role: "", id: "" });
-      setLoggedIn(false);
-      setIsAdmin(false);
-
-      setTimeout(() => {
-        toast.success("Đăng xuất thành công!"); 
-        navigate("/");
-        setIsLoggingOut(false);
-      }, 700);
     } catch (err) {
       console.error("Logout Error:", err.response?.data || err.message);
       toast.error("Đăng xuất thất bại. Vui lòng thử lại!");
