@@ -19,6 +19,7 @@ import Modal from "../components/Modal";
 import { generateInvoice } from "../utils/generateInvoice";
 import { FaCartPlus } from "react-icons/fa6";
 import axiosInstance from "../utils/axiosInstance";
+import { useSelector } from "react-redux";
 
 const UserProfile = () => {
   const [user, setUser] = useState({
@@ -57,6 +58,7 @@ const UserProfile = () => {
   const [deliveredOrders, setDeliveredOrders] = useState([]);
   const [completedOrders, setCompletedOrders] = useState([]);
   const [canceledOrders, setCanceledOrders] = useState([]);
+  const {user: userData} = useSelector((state) => state?.user);
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -81,23 +83,23 @@ const UserProfile = () => {
     return `data:image/jpeg;base64,${base64}`;
   };
 
+  const {user: userLocal} = useSelector((state) => state?.user);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user) {
+        if (!userLocal) {
           navigate("/login");
           return;
         }
 
-        const res = await axiosInstance.get(`/api/users/${user._id}`);
+        const res = await axiosInstance.get(`/api/users/${userLocal._id}`);
 
         const userData = res.data;
         userData.avatar = convertBase64ToImage(userData.avatar);
         setUser(userData);
         setLoggedIn(true);
 
-        fetchUserOrders(user._id);
+        fetchUserOrders(userData._id);
       } catch (err) {
         setError(err.message);
         setLoading(false);
@@ -164,18 +166,19 @@ const UserProfile = () => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      const userData = JSON.parse(localStorage.getItem("user"));
-      if (userData && userData._id) {
-        await axiosInstance.post("/api/users/logout", { userId: userData._id });
-        toast.success("Đăng xuất thành công!");
-      }
+        const respont = await axiosInstance.post("/api/users/logout", {
+          withCredentials: true,
+        });
 
-      localStorage.removeItem("user");
-      setTimeout(() => {
-        navigate("/");
-        setLoggedIn(false);
-        setIsLoggingOut(false);
-      }, 2000);
+        if(respont.data.success) {
+          toast.success("Đăng xuất thành công!");
+
+          setTimeout(() => {
+            navigate("/");
+            setLoggedIn(false);
+            setIsLoggingOut(false);
+          }, 2000);
+        }
     } catch (err) {
       console.error("Logout Error:", err.response?.data || err.message);
       toast.error("Đăng xuất thất bại. Vui lòng thử lại!");
@@ -183,21 +186,22 @@ const UserProfile = () => {
     }
   };
 
+  
+
   const handleAvatarChange = async (file) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = async () => {
         try {
-          const user = JSON.parse(localStorage.getItem("user"));
           const avatarBinary = reader.result;
-
+          
           const updateUser = {
-            ...user,
+            ...userData,
             avatar: avatarBinary.split(",")[1],
           };
 
           const res = await axiosInstance.put(
-            `/api/users/${user._id}`,
+            `/api/users/${userData?._id}`,
             updateUser,
             {
               headers: {
@@ -209,11 +213,6 @@ const UserProfile = () => {
           const updatedUser = res.data;
           updatedUser.avatar = convertBase64ToImage(updatedUser.avatar);
           setUser(updatedUser);
-
-          localStorage.setItem(
-            "user",
-            JSON.stringify({ ...user, avatar: updatedUser.avatar })
-          );
 
           toast.success("Cập nhật ảnh đại diện thành công!");
           setSelectedFile(null);
@@ -241,16 +240,15 @@ const UserProfile = () => {
 
   const handleUpdateProfile = async () => {
     try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
       const res = await axiosInstance.put(
-        `/api/users/${storedUser._id}`,
+        `/api/users/${userData?._id}`,
         {
-          fullName: user.fullName,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-          birthDate: user.birthDate,
-          gender: user.gender,
+          fullName: user?.fullName,
+          email: user?.email,
+          phone: user?.phone,
+          address: user?.address,
+          birthDate: user?.birthDate,
+          gender: user?.gender,
         },
         {
           headers: {
@@ -268,18 +266,6 @@ const UserProfile = () => {
       }
 
       setUser(updatedUser);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          ...storedUser,
-          fullName: updatedUser.fullName,
-          email: updatedUser.email,
-          phone: updatedUser.phone,
-          address: updatedUser.address,
-          birthDate: updatedUser.birthDate,
-          gender: updatedUser.gender,
-        })
-      );
 
       toast.success("Cập nhật thông tin thành công!");
     } catch (err) {
@@ -306,9 +292,7 @@ const UserProfile = () => {
 
       if (response.status === 200) {
         toast.success("Đã hủy đơn hàng thành công");
-
-        const user = JSON.parse(localStorage.getItem("user"));
-        fetchUserOrders(user._id);
+        fetchUserOrders(userData._id);
       }
     } catch (error) {
       console.error("Lỗi khi hủy đơn hàng:", error);

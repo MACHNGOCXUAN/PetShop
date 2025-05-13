@@ -170,8 +170,8 @@ const ProductDetail = () => {
     // dispatch(addToCart({ ...productDetail, cartQuantity: quantity }));
     // navigate("/checkout");
   };
-
-  const user = JSON.parse(localStorage.getItem("user"));
+  
+  const {user} = useSelector((state) => state?.user);
   const handleAddToCart = async () => {
     if (!user?._id) {
       navigate("/login");

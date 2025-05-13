@@ -9,11 +9,12 @@ import {
     getCartByUserId,
     addToCart
 } from '../controllers/cartController.js';
+import { verifyMidedleware } from '../middlewares/verifytoken.js';
 
 const router = express.Router();
 
 // Thêm sản phẩm vào giỏ hàng
-router.post('/add', addToCart);
+router.post('/add', verifyMidedleware.verifyToken, addToCart);
 
 // Lấy giỏ hàng theo user_id
 router.get('/:user_id', getCartByUserId);

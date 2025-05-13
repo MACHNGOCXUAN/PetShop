@@ -5,6 +5,7 @@ import TopNavigation from "../components/TopNavigation";
 import LoadingSpinner from "../components/LoadingSpinner";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const Settings = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -22,9 +23,9 @@ const Settings = () => {
   });
 
   // Fetch current user
+  const {user: userLocal} = useSelector((state) => state?.user);
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id)
         throw new Error("No user found in localStorage");
       const response = await axiosInstance.get(`api/users/${userLocal._id}`);

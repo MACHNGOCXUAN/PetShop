@@ -17,6 +17,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 import Chart from "react-apexcharts";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -48,9 +49,9 @@ const Dashboard = () => {
   );
 
   // Fetch current user
+  const {user: userLocal} = useSelector((state) => state?.user);
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id) throw new Error("No user found");
       const response = await axiosInstance.get(`/api/users/${userLocal._id}`);
       setCurrentUser(response.data);

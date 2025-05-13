@@ -60,6 +60,8 @@ export const CartProvider = ({ children }) => {
           user_id: userId,
           product_id: productId,
           quantity,
+        }, {
+          withCredentials: true // RẤT QUAN TRỌNG để cookie được gửi
         });
 
         if (addResponse?.status === 201) {

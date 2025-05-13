@@ -15,6 +15,7 @@ import OrdersTable from "../components/OrdersTable";
 import OrderDetailsModal from "../components/OrderDetailsModal";
 import Pagination from "../components/Pagination";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const OrderManagement = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -36,9 +37,10 @@ const OrderManagement = () => {
     averageOrderValue: 0,
   });
 
+  const {user: userLocal} = useSelector((state) => state?.user);
+
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const userLocal = JSON.parse(localStorage.getItem("user"));
       if (!userLocal || !userLocal._id)
         throw new Error("No user found in localStorage");
       const response = await axiosInstance.get(`api/users/${userLocal._id}`);

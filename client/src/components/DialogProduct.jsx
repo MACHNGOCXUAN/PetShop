@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
 
@@ -56,7 +56,7 @@ function DialogProduct({ open, setOpen, product }) {
       window.scrollTo(0, 0);
     };
   
-  const user = JSON.parse(localStorage.getItem("user"));
+  const {user} = useSelector((state) => state?.user);
   const handleAddToCart = async () => {
     if (!user?._id) {
       navigate("/login");
