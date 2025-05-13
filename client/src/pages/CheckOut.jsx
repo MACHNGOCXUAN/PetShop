@@ -256,6 +256,8 @@ const CheckOut = () => {
 
   const handlePaymentSelection = (method) => {
     setSelectedMethod(method);
+    console.log("Selected payment method:", method);
+    
   };
 
   return (
@@ -487,18 +489,18 @@ const CheckOut = () => {
 
             <div
               className={`border p-4 rounded-lg flex items-center space-x-3 cursor-pointer ${
-                selectedMethod === "cod"
+                selectedMethod === "COD"
                   ? "border-blue-0 bg-blue-100"
                   : "border-gray-300"
               }`}
-              onClick={() => handlePaymentSelection("cod")}
+              onClick={() => handlePaymentSelection("COD")}
             >
               <input
                 type="radio"
                 name="payment"
-                value="cod"
-                checked={selectedMethod === "cod"}
-                onChange={() => handlePaymentSelection("cod")}
+                value="COD"
+                checked={selectedMethod === "COD"}
+                onChange={() => handlePaymentSelection("COD")}
               />
               <img src={boxCard} alt="COD" width="30" />
               <span>Thanh toán khi giao hàng (COD)</span>
@@ -510,17 +512,17 @@ const CheckOut = () => {
                   ? "border-blue-0 bg-blue-100"
                   : "border-gray-300"
               }`}
-              onClick={() => handlePaymentSelection("bank")}
+              onClick={() => handlePaymentSelection("Vnpay")}
             >
               <input
                 type="radio"
                 name="payment"
                 value="bank"
-                checked={selectedMethod === "bank"}
-                onChange={() => handlePaymentSelection("bank")}
+                checked={selectedMethod === "Vnpay"}
+                onChange={() => handlePaymentSelection("Vnpay")}
               />
               <img src={bankCard} alt="Bank" width="30" />
-              <span>Chuyển khoản qua ngân hàng</span>
+              <span>Ví điện tử vnpay</span>
             </div>
           </div>
           {/* Right Checkout */}

@@ -6,13 +6,16 @@ import {
     updateOrder,
     deleteOrder,
     getOrderStats,
-    getRecentOrders
+    getRecentOrders,
+    checkpaymentvnpay
 } from "../controllers/orderController.js";
 
 const router = express.Router();
 
 // tạo đơn hàng mới
 router.post("/", createOrder);
+
+router.get("/checkoutVnpay", checkpaymentvnpay);
 
 // lấy tất cả đơn hàng
 router.get("/", getOrders);
